@@ -1,6 +1,8 @@
 <template>
   <div>
-
+<diV>
+    <h1>Code Base</h1>
+  </diV>
     <vue-tree
       style="min-height:150vh"
       :dataset="sampleData"
@@ -15,6 +17,8 @@
         >
       </template>
   </vue-tree>
+
+  
   </div>
 </template>
 
