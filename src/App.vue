@@ -10,12 +10,20 @@
       ref="tree"
       
     >
-    <template v-slot:node="{ node, collapsed }">
+    <template v-slot:node="{ node, collapsed }" >
         <span
           class="tree-node"
           :style="{ border: collapsed ? '2px solid grey' : '' }"
-          >{{ node.value }}</span
+          @click="getNode(collapsed)"
+          >
+          {{ node.value }}
+          <div class="pop-up">
+            data number {{  node.value }}
+            {{  collapsed }}
+          </div>
+          </span
         >
+        
       </template>
   </vue-tree>
 
@@ -26,6 +34,14 @@
     <button @click="$refs.tree.zoomOut()" style="margin:0 20px">-</button>
     <button @click="$refs.tree.restoreScale()"  >reset</button>
   </div>
+
+  <div class="tree_interaction tree_interaction2">
+     <button @click="expand">
+      toggle collapse
+    </button>
+  </div>
+ 
+  
 </template>
 
 <script>
@@ -87,19 +103,48 @@ export default {
     };
   },
   methods: {
-   
+    collapseNode(node) {
+      node.collapsed = true;
+    },
+    getNode(status) {
+      console.log(status)      
+      this.$refs.tree.treeChartCore.nodeDataList[0]
+    },
+    // expandAllNodes(node, collapse = false) {
+    //   node.collapsed = collapse;
+    //   if (node.children) {
+    //     node.children.forEach((child) => {
+    //       this.expandAllNodes(child, collapse);
+    //     });
+    //   }
+    // },
+    expand() {
+      document.querySelectorAll('.tree-node')[0].click()
+    },
+
+    
+
+
     onClick() {
       this.showTree = true;
     },
   },
   mounted() {
-    console.log(this.$refs.tree.treeChartCore.linkDataList.length);
+    console.log(this.$refs.tree.treeChartCore.nodeDataList[0].data._key);
     console.log(this.$refs.tree);
+    
+
+    setTimeout(() => {
+      console.log()  
+    }, 2000);
   }
 };
 </script>
 
 <style>
+.tree_interaction2{
+      top: 16% !important;
+}
 .tree_interaction{
     position: fixed;
     top: 4%;
@@ -107,7 +152,7 @@ export default {
     background: #7592d5;
     padding: 12px;
     border-radius: 7px;
-
+    width: 150px;
 }
 .tree-container{
   overflow: visible !important;
@@ -115,6 +160,7 @@ export default {
   cursor: pointer;
 }
 .tree-node{
+  position: relative;
   border-radius: 50%;
   background-color: #ccc;
   width: 40px;
@@ -122,6 +168,36 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  
+}
+.pop-up{
+  position: absolute;
+  min-width: fit-content;
+  width:120px;
+  height: 30px;
+  background-color: #2c3e50;
+  z-index: 11;
+  color: #fff;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left:55px;
+  opacity: 0;
+  transition: .3s all;
+}
+.tree-node:hover .pop-up{
+  opacity: 1;
+}
+.pop-up::before{
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #2c3e50;
+    left: -9px;
+    transform: rotate(137deg);
+    z-index: -1;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
